@@ -1,0 +1,143 @@
+DermRoot:
+
+<ColoredLabel@Label>:
+    font_size: '48sp'
+    color: (.6, .6, .6, 1)
+    canvas.before:
+        Color:
+            rgb: (.9, .9, .9)
+        Rectangle:
+            pos: self.x + sp(2), self.y + sp(2)
+            size: self.width - sp(4), self.height - sp(4)
+
+<DermRoot>:
+    DemographForm:
+        # the arguments to the handler are available
+        # as `args` - the last argument will be our
+        # data, so we can grab it via `args[-1]`
+        on_save: root.add_entry_to_db(args[-1])
+
+<DemographForm>:
+    orientation: "vertical"
+    cols: 2
+
+    GridLayout:
+        age_input: age_input
+        sex: sex
+        myLabel: myLabel_id
+        datepicker: datepicker_id
+        cols: 2
+#
+#        ToggleButton:
+#            text: 'Loop'
+#            id: btnloop
+#
+#        Label:
+#            size_hint_x: None
+#            width: self.height
+#            text: '{}'.format(carousel.index)
+#
+#        Button:
+#            size_hint_x: None
+#            width: self.height
+#            text: 'Prev'
+#            on_release: carousel.load_previous()
+
+#        Button:
+#            size_hint_x: None
+#            width: self.height
+#            text: 'Next'
+#            on_release: carousel.load_next()
+
+#        Carousel:
+#            id: carousel
+#            loop: btnloop.state == 'down'
+#
+#            ColoredLabel:
+#                src: = "type1.png" % i
+#            image = AsyncImage(source=src, allow_stretch=True)
+#            carousel.add_widget(image)
+#                text: 'Slide 0'
+#
+#            ColoredLabel:
+#                text: 'Slide 1'
+#
+#            ColoredLabel:
+#                text: 'Slide 2'
+
+
+        Label:
+            text: "Patient's Age:"
+        TextInput:
+            id: age_input
+            multiline: False
+#            focus: series4
+            # set the value from the data dict. if the key
+            # doesn't exist in the dict, then use a default value
+            text: root.data['age'] if 'age' in root.data else ''
+            # when the value changes, update the data dict
+            on_text: root.data['age'] = self.text
+        Label:
+            text: "Sex:"
+        ToggleButton:
+            id: sex 
+            text: "Male" if self.state == 'normal' else "Female"
+
+        Label:
+            text: "Wanneer gebeurde het?"
+        DatePicker:
+            id: datepicker_id
+            pHint: 0.7,0.4
+            size_hint: 0.4, 0.3
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            on_text: root.data['datum'] = self.text
+
+        Label:
+            id: myLabel_id
+
+#        Button:
+#            text: 'Update'
+#            on_press: root.Picker()
+
+        Label:
+            text: "Standard Series to Include?"
+        GridLayout:
+            series1: series1
+            series2: series2
+            series3: series3 
+
+
+            cols: 2
+            CheckBox:
+                id: series1
+                on_active: root.handle_checkbox(1)
+            Label:
+                text: "Series1"
+            CheckBox:
+                id: series2
+                on_active: root.handle_checkbox(2)
+            Label:
+                text: "Series2"
+            CheckBox:
+                id: series3
+                on_active: root.handle_checkbox(3)
+            Label:
+                text: "series3"
+#            CheckBox:
+#                id: series4
+#            Label:
+#                text: "series4"
+#            CheckBox:
+#                id: series5
+#            Label:
+#                text: "Series 5"
+
+
+    Button:
+        height: "40dp"
+        size_hint_y: None
+        text: "Add Entry to Database"
+        # dispatch our new `on_save` event
+        on_press: root.dispatch('on_save', root.data)
